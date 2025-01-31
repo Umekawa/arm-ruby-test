@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+    services:
+      mysql:
+        image: mysql:8.0.29
+        env:
+          MYSQL_USER: nobody
+          MYSQL_PASSWORD: nobody
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        volumes:
+          - mysql-data:/var/lib/mysql
+      redis:
+        image: redis:5.0.0
+        ports:
+          - 6379:6379
